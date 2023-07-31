@@ -59,7 +59,7 @@ class ShoppingCart(models.Model):
         Recipe, on_delete=models.CASCADE, related_name='shopping')
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='shopping')
-    
+
     def __str__(self):
         return f'{self.recipe} в списке покупок у {self.user}'
 
@@ -69,6 +69,6 @@ class Favorite(models.Model):
         User, on_delete=models.CASCADE, related_name='favorites')
     recipe = models.ForeignKey(
         Recipe, on_delete=models.CASCADE, related_name='favorites')
-    
+
     def __str__(self):
         return f'{self.recipe} в избранных у {self.user}'

@@ -40,6 +40,6 @@ class Subscribe(models.Model):
                 name='unique_author_subcriber'
             )
         ]
-    
+
     def __str__(self):
         return f'{self.subscriber} подписан на {self.author}'
