@@ -5,7 +5,7 @@ from recipes.models import Recipe
 
 class RecipeFilter(django_filters.rest_framework.FilterSet):
     tags = django_filters.CharFilter(field_name='slug',
-                                     method='filter_tags', distinct=True)
+                                     method='filter_tags')
     is_favorited = django_filters.NumberFilter(
         field_name='is_favorited', method='filter_is_favorited')
 
@@ -19,7 +19,7 @@ class RecipeFilter(django_filters.rest_framework.FilterSet):
 
     def filter_tags(self, queryset, name, value):
         request_value = self.request.GET.getlist('tags')
-        return queryset.filter(tags__slug__in=request_value)
+        return queryset.filter(tags__slug__in=request_value).distinct()
 
     def filter_is_favorited(self, queryset, name, value):
         if self.request.user.is_authenticated:

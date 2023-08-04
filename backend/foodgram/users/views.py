@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from djoser.views import UserViewSet
 from users.models import User, Subscribe
-from users.serializers import CustomUserSerializer, CustomUserCreateSerializer
+from users.serializers import CustomUserSerializer
 from api.serializers import SubscribeSerializer
 from rest_framework.decorators import action
 
@@ -17,18 +17,13 @@ class CustomUserViewset(UserViewSet):
             return (AllowAny(),)
         return super().get_permissions()
 
-    def get_serializer_class(self):
-        if self.request.method in ['POST', 'PUT', 'PATCH']:
-            return CustomUserCreateSerializer
-        return super().get_serializer_class()
-
     @action(detail=True, methods=['post', 'delete'],
             permission_classes=[IsAuthenticated])
-    def subscribe(self, request, pk):
+    def subscribe(self, request, id):
         if request.method == 'POST':
-            return self.to_add(Subscribe, request.user, pk)
+            return self.to_add(Subscribe, request.user, id)
         if request.method == 'DELETE':
-            return self.to_delete(Subscribe, request.user, pk)
+            return self.to_delete(Subscribe, request.user, id)
 
     def to_add(self, model, user, pk):
         author = User.objects.get(id=pk)
