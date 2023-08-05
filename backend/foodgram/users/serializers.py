@@ -1,8 +1,9 @@
-from rest_framework import serializers
-from djoser.serializers import UserSerializer
 from django.contrib.auth import get_user_model
-from users.models import Subscribe
+from djoser.serializers import UserSerializer
+from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
+
+from users.models import Subscribe
 
 User = get_user_model()
 

@@ -1,27 +1,27 @@
-from django.shortcuts import get_object_or_404
-from rest_framework import status, viewsets
-from rest_framework.response import Response
-from django.http import HttpResponse
-from rest_framework.permissions import IsAuthenticated, SAFE_METHODS
-from rest_framework import filters
-from rest_framework.decorators import action
 from django.db.models import Sum
-from api.filter import RecipeFilter
-from api.pagination import CustomPagination
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
+from recipes.models import (Favorite, Ingredient, IngredientsInRecipe, Recipe,
+                            ShoppingCart, Tag)
+from rest_framework import filters, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
+from rest_framework.response import Response
 
 from api import permissions
-from recipes.models import (Recipe, Tag, Ingredient,
-                            ShoppingCart, IngredientsInRecipe, Favorite)
-from api.serializers import (RecipeResponseSerializer, TagSerializer,
-                             IngredientSerializer, RecipeRequestSerializer,
-                             RecipeShortResponseSerializer)
+from api.filter import RecipeFilter, CustomSearchFilter
+from api.pagination import CustomPagination
+from api.serializers import (IngredientSerializer, RecipeRequestSerializer,
+                             RecipeResponseSerializer,
+                             RecipeShortResponseSerializer, TagSerializer)
 
 
 class RecipeViewset(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeResponseSerializer
-    permission_classes = (permissions.IsAuthorOrReadOnlyPermission,)
+    permission_classes = (
+        permissions.IsAuthorOrAuthenticatedOrReadOnlyPermission,)
     pagination_class = (CustomPagination)
     filter_backends = (filters.OrderingFilter, DjangoFilterBackend)
     filterset_class = RecipeFilter
@@ -47,6 +47,13 @@ class RecipeViewset(viewsets.ModelViewSet):
     )
     def download_shopping_cart(self, request):
         user = request.user
+        filename = f'{user.username}_shopping_cart.txt'
+        response = HttpResponse(
+            self.shopping_cart_generate(user), content_type='text/plain')
+        response['Content-Disposition'] = f'attachment; filename={filename}'
+        return response
+
+    def shopping_cart_generate(self, user):
         ingredients = IngredientsInRecipe.objects.filter(
             recipe__shopping__user=user
         ).values('ingredient__name',
@@ -61,10 +68,7 @@ class RecipeViewset(viewsets.ModelViewSet):
             f'({ingredient["ingredient__measurement_unit"]})'
             for ingredient in ingredients
         ])
-        filename = f'{user.username}_shopping_cart.txt'
-        response = HttpResponse(shopping_cart, content_type='text/plain')
-        response['Content-Disposition'] = f'attachment; filename={filename}'
-        return response
+        return shopping_cart
 
     @action(detail=True, methods=['post', 'delete'],
             permission_classes=[IsAuthenticated])
@@ -110,7 +114,7 @@ class TagViewset(viewsets.ModelViewSet):
 class IngredientViewset(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-    filter_backends = (filters.SearchFilter,)
+    filter_backends = (CustomSearchFilter,)
     permission_classes = (permissions.IsAdminOrReadOnlyPermission,)
     pagination_class = None
     search_fields = ('name',)

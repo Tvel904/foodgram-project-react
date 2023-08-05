@@ -26,7 +26,7 @@ Frontend - JavaScript, HTML, CSS, React
     docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
     docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/
 
-    Также для загрузки в БД предустановленных ингридентов, используйте следующую команду:
+    Также для загрузки в БД предустановленных ингредиентов, используйте следующую команду:
     docker compose -f docker-compose.production.yml exec backend python manage.py loaddata ingredients.json
 ```
 
@@ -47,7 +47,7 @@ Frontend - JavaScript, HTML, CSS, React
 ## Для теста проекта на рабочем сервере
 
 Заходите на сайт *https://foodgramforfood.hopto.org*;
-Данные для опробования админки - *email* - **tvel9044@yandex.ru**, *password* - **9044bones9044**
+Данные для опробования админки - *email* - **111@mail.ru**, *password* - **9044bones9044**
 
 ## Автор данного чуда
 

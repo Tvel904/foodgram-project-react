@@ -1,12 +1,13 @@
-from rest_framework import serializers
-from django.db import transaction
 import base64
-from django.db.models import F
-from django.core.files.base import ContentFile
-from rest_framework.fields import SerializerMethodField
+
 from django.contrib.auth import get_user_model
-from recipes.models import (Tag, Recipe, Favorite, Ingredient,
-                            IngredientsInRecipe, ShoppingCart)
+from django.core.files.base import ContentFile
+from django.db import transaction
+from django.db.models import F
+from recipes.models import (Favorite, Ingredient, IngredientsInRecipe, Recipe,
+                            ShoppingCart, Tag)
+from rest_framework import serializers
+from rest_framework.fields import SerializerMethodField
 from users.serializers import CustomUserSerializer
 
 User = get_user_model()

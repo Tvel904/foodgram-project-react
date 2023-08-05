@@ -1,4 +1,5 @@
 import django_filters
+from rest_framework import filters
 
 from recipes.models import Recipe
 
@@ -36,3 +37,7 @@ class RecipeFilter(django_filters.rest_framework.FilterSet):
     class Meta:
         model = Recipe
         fields = ('tags', 'is_favorited', 'is_in_shopping_cart', 'author')
+
+
+class CustomSearchFilter(filters.SearchFilter):
+    search_param = 'name'

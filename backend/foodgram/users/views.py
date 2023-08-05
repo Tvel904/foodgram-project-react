@@ -1,11 +1,12 @@
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from djoser.views import UserViewSet
-from users.models import User, Subscribe
-from users.serializers import CustomUserSerializer
 from api.serializers import SubscribeSerializer
+from djoser.views import UserViewSet
+from rest_framework import status
 from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+
+from users.models import Subscribe, User
+from users.serializers import CustomUserSerializer
 
 
 class CustomUserViewset(UserViewSet):
