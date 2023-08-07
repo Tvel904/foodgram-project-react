@@ -47,7 +47,6 @@ Frontend - JavaScript, HTML, CSS, React
 ## Для теста проекта на рабочем сервере
 
 Заходите на сайт *https://foodgramforfood.hopto.org*;
-Данные для опробования админки - *email* - **111@mail.ru**, *password* - **9044bones9044**
 
 ## Автор данного чуда
 
